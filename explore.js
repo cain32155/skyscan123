@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // 4. Planets Data
-  const texBase = 'https://www.solarsystemscope.com/textures/download/';
+  const texBase = 'assets/textures/';
   const planetData = [
     { name: "Sun", color: 0xffcc00, size: 40, distance: 0, speed: 0, type: "Star", moons: 0, tex: texBase+"2k_sun.jpg", desc: "The star at the center of the Solar System. It is a nearly perfect sphere of hot plasma." },
     { name: "Mercury", color: 0xaaaaaa, size: 3, distance: 70, speed: 0.02, type: "Terrestrial", moons: 0, tex: texBase+"2k_mercury.jpg", desc: "The smallest planet in the Solar System and the closest to the Sun." },
@@ -151,74 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   scene.add(astMesh);
 
-  // 4c. Multiversal Map Concentric Rings
-  const multiverseGroup = new THREE.Group();
-  multiverseGroup.visible = false;
-  const scales = [
-    { name: "Oort Cloud", radius: 1200, color: 0x00ffff, desc: "The extended shell of icy objects that exist in the outermost reaches of the solar system." },
-    { name: "Milky Way Galaxy", radius: 2500, color: 0xff00ff, desc: "Our home galaxy, a barred spiral galaxy containing 100-400 billion stars." },
-    { name: "Local Group", radius: 4500, color: 0x00ff00, desc: "The galaxy group that includes the Milky Way, Andromeda, and about 80 smaller galaxies." },
-    { name: "Virgo Supercluster", radius: 7000, color: 0xffff00, desc: "A massive concentration of galaxies that contains the Local Group." },
-    { name: "Laniakea", radius: 10000, color: 0xff8800, desc: "The galaxy supercluster that is home to the Milky Way and approximately 100,000 other nearby galaxies." },
-    { name: "Observable Universe", radius: 15000, color: 0xffffff, desc: "A spherical region of the universe comprising all matter that can be observed from Earth." }
-  ];
-  scales.forEach(scale => {
-    const rGeo = new THREE.RingGeometry(scale.radius - 15, scale.radius + 15, 128);
-    const rMat = new THREE.MeshBasicMaterial({ color: scale.color, side: THREE.DoubleSide, transparent: true, opacity: 0.15 });
-    const ring = new THREE.Mesh(rGeo, rMat);
-    ring.rotation.x = Math.PI / 2;
-    multiverseGroup.add(ring);
+  // 4c. Multiversal Map Concentric Rings removed from 3D view
 
-    const oGeo = new THREE.SphereGeometry(80, 32, 32);
-    const oMat = new THREE.MeshBasicMaterial({ color: scale.color });
-    const orb = new THREE.Mesh(oGeo, oMat);
-    orb.position.set(scale.radius, 0, 0);
-    orb.userData = { name: scale.name, type: "Cosmic Scale", desc: scale.desc, moons: "N/A" };
-    planetMeshes.push(orb);
-    multiverseGroup.add(orb);
-  });
-  scene.add(multiverseGroup);
-
-  // 5. Flight Controls (Simple WASD + Mouse look)
-  const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
-  let isDragging = false;
-  let previousMousePosition = { x: 0, y: 0 };
-  let targetYaw = 0;
-  let targetPitch = 0;
-  let yaw = 0;
-  let pitch = 0;
-
-  document.addEventListener('keydown', (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key] = true; });
-  document.addEventListener('keyup', (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key] = false; });
-
-  // Minecraft style pointer lock
-  canvas.addEventListener('click', () => {
-    if (document.pointerLockElement !== canvas) {
-      canvas.requestPointerLock();
-    }
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (document.pointerLockElement === canvas) {
-      targetYaw -= e.movementX * 0.002;
-      targetPitch -= e.movementY * 0.002;
-      targetPitch = Math.max(-Math.PI/2, Math.min(Math.PI/2, targetPitch));
-    }
-  });
-
-  function updateCameraMovement() {
-    const moveSpeed = 3.0;
-    const direction = new THREE.Vector3();
-    camera.getWorldDirection(direction);
-    
-    const right = new THREE.Vector3();
-    right.crossVectors(direction, camera.up).normalize();
-
-    if (keys.w || keys.ArrowUp) camera.position.addScaledVector(direction, moveSpeed);
-    if (keys.s || keys.ArrowDown) camera.position.addScaledVector(direction, -moveSpeed);
-    if (keys.a || keys.ArrowLeft) camera.position.addScaledVector(right, -moveSpeed);
-    if (keys.d || keys.ArrowRight) camera.position.addScaledVector(right, moveSpeed);
-  }
+  // 5. Orbit Controls
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.maxDistance = 10000;
 
   // 6. Raycasting (Clicking Planets)
   const raycaster = new THREE.Raycaster();
@@ -230,12 +169,10 @@ document.addEventListener('DOMContentLoaded', () => {
     infoPanel.style.display = 'none';
   });
 
-  canvas.addEventListener('mousedown', (e) => {
-    if (document.pointerLockElement !== canvas) return;
-    
-    // Raycast from the center crosshair
-    mouse.x = 0;
-    mouse.y = 0;
+  window.addEventListener('click', (e) => {
+    // Calculate mouse position in normalized device coordinates (-1 to +1)
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(planetMeshes);
@@ -261,32 +198,13 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       
       infoPanel.style.display = 'block';
-      document.exitPointerLock(); // Free the mouse so they can click the close button
     }
   });
 
-  // 7. Multiversal Map Animation
-  let isMultiverseMode = false;
+  // 7. Multiversal Map Redirect
   document.getElementById('multiverse-btn').addEventListener('click', () => {
-    isMultiverseMode = !isMultiverseMode;
-    const btn = document.getElementById('multiverse-btn');
-    if(isMultiverseMode) {
-      btn.innerHTML = `<i class="fa-solid fa-solar-system"></i> Back to Solar System`;
-      // Zoom out way far
-      targetCameraZ = 18000;
-      multiverseGroup.visible = true;
-    } else {
-      btn.innerHTML = `<i class="fa-solid fa-infinity"></i> View Multiversal Map`;
-      // Zoom back in
-      targetCameraZ = 400;
-      camera.position.set(0, 50, 400);
-      yaw = 0; pitch = 0;
-      camera.rotation.set(0,0,0);
-      multiverseGroup.visible = false;
-    }
+    window.location.href = 'multiverse.html';
   });
-
-  let targetCameraZ = 400;
 
   // 8. Animation Loop
   function animate() {
@@ -298,27 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
       p.mesh.rotation.y += 0.01; // self rotation
     });
 
-    updateCameraMovement();
-
-    // Smoothly interpolate yaw and pitch to follow mouse
-    if(!isMultiverseMode) {
-      yaw += (targetYaw - yaw) * 0.05;
-      pitch += (targetPitch - pitch) * 0.05;
-    }
-
-    // Smooth transition for multiverse mode
-    if(isMultiverseMode) {
-      camera.position.z += (targetCameraZ - camera.position.z) * 0.02;
-      camera.position.y += (2000 - camera.position.y) * 0.02;
-      // auto rotate to look down slightly
-      pitch += (-Math.PI/8 - pitch) * 0.02;
-    }
-    
-    // Apply camera rotation
-    const qx = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
-    const qy = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
-    camera.quaternion.copy(new THREE.Quaternion().multiplyQuaternions(qx, qy));
-
+    controls.update();
     renderer.render(scene, camera);
   }
 

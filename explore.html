@@ -72,17 +72,17 @@
       <button id="p-guide-btn" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.5rem; font-size: 0.85rem;"><i class="fa-solid fa-book-open"></i> Read In-Depth Guide</button>
     </div>
 
-    <div class="controls-hint text-primary">
-      <strong>Click</strong> anywhere to lock mouse (Minecraft style). Use <strong>W, A, S, D</strong> to fly.
+    <div class="controls-hint text-primary" style="text-align: center;">
+      <strong>Left Click + Drag</strong> to rotate camera. <strong>Scroll</strong> to zoom. <strong>Right Click + Drag</strong> to pan.<br>
+      <strong>Click</strong> on planets to view info.
     </div>
 
-    <!-- Center Crosshair -->
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 4px; background: white; border-radius: 50%; pointer-events: none; mix-blend-mode: difference; z-index: 20;"></div>
   </div>
 
   <canvas id="glcanvas"></canvas>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="explore.js"></script>
 </body>
 </html>

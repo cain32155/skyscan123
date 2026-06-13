@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyScan - Multiversal Map</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, var(--bg-dark) 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      z-index: 10;
+    }
+
+    /* Radar Map Container */
+    .radar-container {
+      position: relative;
+      width: 800px;
+      height: 800px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .radar-ring {
+      position: absolute;
+      border: 1px dashed rgba(0, 240, 255, 0.3);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: spin linear infinite;
+    }
+
+    .radar-ring:hover {
+      border-color: rgba(0, 240, 255, 0.8);
+      cursor: pointer;
+    }
+
+    /* Entity Orbs */
+    .entity-orb {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: var(--text-cyan);
+      border-radius: 50%;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 15px var(--text-cyan);
+      transition: all 0.2s ease;
+    }
+
+    .radar-ring:hover .entity-orb {
+      transform: translate(-50%, -50%) scale(1.5);
+      background: #fff;
+    }
+
+    .entity-label {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      text-shadow: 0 0 5px #000;
+      pointer-events: none;
+    }
+
+    /* Rings definition */
+    .ring-1 { width: 150px; height: 150px; animation-duration: 40s; border-color: rgba(255, 204, 0, 0.4); }
+    .ring-1 .entity-orb { background: #ffcc00; box-shadow: 0 0 15px #ffcc00; }
+    
+    .ring-2 { width: 300px; height: 300px; animation-duration: 60s; border-color: rgba(0, 255, 255, 0.4); animation-direction: reverse; }
+    .ring-2 .entity-orb { background: #00ffff; box-shadow: 0 0 15px #00ffff; }
+    
+    .ring-3 { width: 450px; height: 450px; animation-duration: 80s; border-color: rgba(255, 0, 255, 0.4); }
+    .ring-3 .entity-orb { background: #ff00ff; box-shadow: 0 0 15px #ff00ff; }
+    
+    .ring-4 { width: 600px; height: 600px; animation-duration: 100s; border-color: rgba(0, 255, 0, 0.4); animation-direction: reverse; }
+    .ring-4 .entity-orb { background: #00ff00; box-shadow: 0 0 15px #00ff00; }
+
+    .ring-5 { width: 750px; height: 750px; animation-duration: 120s; border-color: rgba(255, 136, 0, 0.4); }
+    .ring-5 .entity-orb { background: #ff8800; box-shadow: 0 0 15px #ff8800; }
+
+    @keyframes spin {
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .center-point {
+      width: 10px;
+      height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      box-shadow: 0 0 20px #fff;
+    }
+
+    /* Info Panel */
+    .info-panel {
+      position: absolute;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 350px;
+      display: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="explore.html" class="btn btn-secondary glass-panel"><i class="fa-solid fa-solar-system"></i> Back to Solar System</a>
+  </div>
+
+  <div class="radar-container">
+    <div class="center-point"></div>
+
+    <div class="radar-ring ring-1" data-entity="Oort Cloud">
+      <div class="entity-orb">
+        <div class="entity-label">Oort Cloud</div>
+      </div>
+    </div>
+
+    <div class="radar-ring ring-2" data-entity="Milky Way Galaxy">
+      <div class="entity-orb">
+        <div class="entity-label">Milky Way Galaxy</div>
+      </div>
+    </div>
+
+    <div class="radar-ring ring-3" data-entity="Local Group">
+      <div class="entity-orb">
+        <div class="entity-label">Local Group</div>
+      </div>
+    </div>
+
+    <div class="radar-ring ring-4" data-entity="Virgo Supercluster">
+      <div class="entity-orb">
+        <div class="entity-label">Virgo Supercluster</div>
+      </div>
+    </div>
+
+    <div class="radar-ring ring-5" data-entity="Laniakea">
+      <div class="entity-orb">
+        <div class="entity-label">Laniakea</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reusable Info Panel -->
+  <div id="m-info" class="glass-panel info-panel">
+    <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+      <h3 id="m-name" class="text-cyan" style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 600;"><i class="fa-solid fa-infinity"></i> Entity</h3>
+      <i class="fa-solid fa-xmark" id="m-close" style="cursor: pointer; color: var(--text-muted);"></i>
+    </div>
+    <img id="m-img" src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000" alt="Entity" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
+    <p id="m-desc" class="text-secondary" style="font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.4;">Description goes here.</p>
+    
+    <button id="m-guide-btn" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.5rem; font-size: 0.85rem;"><i class="fa-solid fa-book-open"></i> Read In-Depth Guide</button>
+  </div>
+
+  <script src="multiverse.js"></script>
+</body>
+</html>
