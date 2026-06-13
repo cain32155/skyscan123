@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Core (Nuclear Fusion)] --> B[Radiative Zone]
-          B --> C[Convective Zone]
-          C --> D[Photosphere (Surface)]
-          D --> E[Chromosphere]
-          E --> F[Corona]
+          A["Core (Nuclear Fusion)"] --> B["Radiative Zone"]
+          B --> C["Convective Zone"]
+          C --> D["Photosphere (Surface)"]
+          D --> E["Chromosphere"]
+          E --> F["Corona"]
           style A fill:#ffcc00,stroke:#333
           style B fill:#ff9900,stroke:#333
           style C fill:#ff6600,stroke:#333
@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Silicate Crust (100-300km)] --> B[Silicate Mantle (600km)]
-          B --> C[Massive Iron Core (1,800km)]
+          A["Silicate Crust (100-300km)"] --> B["Silicate Mantle (600km)"]
+          B --> C["Massive Iron Core (1,800km)"]
           style A fill:#aaaaaa,stroke:#333
           style B fill:#888888,stroke:#333
           style C fill:#555555,stroke:#333
@@ -91,10 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Dense CO2 Atmosphere] --> B[Sulfuric Acid Clouds]
-          B --> C[Silicate Crust]
-          C --> D[Rocky Mantle]
-          D --> E[Iron Core]
+          A["Dense CO2 Atmosphere"] --> B["Sulfuric Acid Clouds"]
+          B --> C["Silicate Crust"]
+          C --> D["Rocky Mantle"]
+          D --> E["Iron Core"]
           style A fill:#e3bb76,stroke:#333
           style B fill:#d3ab66,stroke:#333
           style C fill:#b38b46,stroke:#333
@@ -147,8 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Dusty Crust (Iron-rich basaltic rock)] --> B[Silicate Mantle]
-          B --> C[Core (Iron, Nickel, Sulfur)]
+          A["Dusty Crust (Iron-rich basaltic rock)"] --> B["Silicate Mantle"]
+          B --> C["Core (Iron, Nickel, Sulfur)"]
           style A fill:#c1440e,stroke:#333
           style B fill:#9a360b,stroke:#333
           style C fill:#666,stroke:#333
@@ -174,9 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Atmosphere (Hydrogen/Helium)] --> B[Liquid Hydrogen]
-          B --> C[Liquid Metallic Hydrogen]
-          C --> D[Dense Core of Rock & Ice]
+          A["Atmosphere (Hydrogen/Helium)"] --> B["Liquid Hydrogen"]
+          B --> C["Liquid Metallic Hydrogen"]
+          C --> D["Dense Core of Rock & Ice"]
           style A fill:#d39c7e,stroke:#333
           style B fill:#b37b5e,stroke:#333
           style C fill:#8a5232,stroke:#333
@@ -202,9 +202,9 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Upper Atmosphere (Ammonia Clouds)] --> B[Hydrogen/Helium Envelope]
-          B --> C[Liquid Metallic Hydrogen Mantle]
-          C --> D[Rocky/Icy Core]
+          A["Upper Atmosphere (Ammonia Clouds)"] --> B["Hydrogen/Helium Envelope"]
+          B --> C["Liquid Metallic Hydrogen Mantle"]
+          C --> D["Rocky/Icy Core"]
           style A fill:#ead6b8,stroke:#333
           style B fill:#caac82,stroke:#333
           style C fill:#a8885b,stroke:#333
@@ -230,8 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Atmosphere (Hydrogen, Helium, Methane)] --> B[Icy Mantle (Water, Ammonia, Methane)]
-          B --> C[Rocky Silicate/Iron-Nickel Core]
+          A["Atmosphere (Hydrogen, Helium, Methane)"] --> B["Icy Mantle (Water, Ammonia, Methane)"]
+          B --> C["Rocky Silicate/Iron-Nickel Core"]
           style A fill:#d1e7e7,stroke:#333
           style B fill:#9ecbcb,stroke:#333
           style C fill:#555,stroke:#333
@@ -256,8 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Atmosphere (Hydrogen, Helium, Methane gas)] --> B[Mantle (Water, Ammonia, Methane ices)]
-          B --> C[Core (Rock and Ice)]
+          A["Atmosphere (Hydrogen, Helium, Methane gas)"] --> B["Mantle (Water, Ammonia, Methane ices)"]
+          B --> C["Core (Rock and Ice)"]
           style A fill:#3f54ba,stroke:#333
           style B fill:#2b3a8a,stroke:#333
           style C fill:#444,stroke:#333
@@ -282,9 +282,9 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph LR
-          A[Sun] --> B[Kuiper Belt (30-50 AU)]
-          B --> C[Inner Oort Cloud / Hills Cloud (2,000 - 20,000 AU)]
-          C --> D[Outer Spherical Oort Cloud (20,000 - 100,000 AU)]
+          A["Sun"] --> B["Kuiper Belt (30-50 AU)"]
+          B --> C["Inner Oort Cloud / Hills Cloud (2,000 - 20,000 AU)"]
+          C --> D["Outer Spherical Oort Cloud (20,000 - 100,000 AU)"]
       `
     },
     "Milky Way Galaxy": {
@@ -306,10 +306,10 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph LR
-          A[Central Bulge & SMBH] --> B[Inner Spiral Arms]
-          B --> C[Orion Spur (Our Solar System)]
-          B --> D[Outer Spiral Arms]
-          D --> E[Galactic Halo & Dark Matter]
+          A["Central Bulge & SMBH"] --> B["Inner Spiral Arms"]
+          B --> C["Orion Spur (Our Solar System)"]
+          B --> D["Outer Spiral Arms"]
+          D --> E["Galactic Halo & Dark Matter"]
       `
     },
     "Local Group": {
@@ -331,11 +331,11 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[The Local Group] --> B[Milky Way Subgroup]
-          A --> C[Andromeda Subgroup]
-          A --> D[Triangulum Galaxy]
-          B --> E[Magellanic Clouds & Dwarfs]
-          C --> F[M32, M110 & Dwarfs]
+          A["The Local Group"] --> B["Milky Way Subgroup"]
+          A --> C["Andromeda Subgroup"]
+          A --> D["Triangulum Galaxy"]
+          B --> E["Magellanic Clouds & Dwarfs"]
+          C --> F["M32, M110 & Dwarfs"]
       `
     },
     "Virgo Supercluster": {
@@ -357,10 +357,10 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Virgo Supercluster] --> B[Virgo Cluster (Core)]
-          A --> C[Local Group]
-          A --> D[Fornax Cluster]
-          A --> E[Eridanus Cluster]
+          A["Virgo Supercluster"] --> B["Virgo Cluster (Core)"]
+          A --> C["Local Group"]
+          A --> D["Fornax Cluster"]
+          A --> E["Eridanus Cluster"]
       `
     },
     "Laniakea": {
@@ -382,10 +382,10 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Laniakea Supercluster] --> B[Great Attractor]
-          A --> C[Virgo Supercluster]
-          A --> D[Hydra-Centaurus Supercluster]
-          C --> E[Local Group]
+          A["Laniakea Supercluster"] --> B["Great Attractor"]
+          A --> C["Virgo Supercluster"]
+          A --> D["Hydra-Centaurus Supercluster"]
+          C --> E["Local Group"]
       `
     },
     "Observable Universe": {
@@ -407,10 +407,10 @@ document.addEventListener('DOMContentLoaded', () => {
       `,
       diagram: `
         graph TD
-          A[Observable Universe] --> B[Cosmic Web]
-          B --> C[Superclusters (e.g. Laniakea)]
-          C --> D[Galaxy Clusters]
-          D --> E[Galaxies]
+          A["Observable Universe"] --> B["Cosmic Web"]
+          B --> C["Superclusters (e.g. Laniakea)"]
+          C --> D["Galaxy Clusters"]
+          D --> E["Galaxies"]
       `
     }
   };

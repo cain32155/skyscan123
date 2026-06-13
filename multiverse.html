@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkyScan - Multiversal Map</title>
+  <title>SkyScan - Universal Map</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
-      background-color: var(--bg-dark);
-      background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, var(--bg-dark) 100%);
-      color: var(--text-primary);
+      background-color: #020205;
+      background-image: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #020205 100%);
+      color: #ffffff;
       min-height: 100vh;
       overflow: hidden;
       display: flex;
@@ -45,13 +45,11 @@
       left: 50%;
       transform: translate(-50%, -50%);
       animation: spin linear infinite;
+      pointer-events: none; /* Let clicks pass through the huge transparent ring */
     }
 
-    .radar-ring:hover {
-      border-color: rgba(0, 240, 255, 0.8);
-      cursor: pointer;
-    }
-
+    /* We use a pseudo-element or just pointer-events on the orb itself to trigger the ring's hover */
+    
     /* Entity Orbs */
     .entity-orb {
       position: absolute;
@@ -64,9 +62,11 @@
       transform: translate(-50%, -50%);
       box-shadow: 0 0 15px var(--text-cyan);
       transition: all 0.2s ease;
+      pointer-events: auto; /* Make the orb clickable! */
+      cursor: pointer;
     }
 
-    .radar-ring:hover .entity-orb {
+    .entity-orb:hover {
       transform: translate(-50%, -50%) scale(1.5);
       background: #fff;
     }
