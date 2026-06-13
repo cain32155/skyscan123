@@ -223,28 +223,29 @@ document.addEventListener('DOMContentLoaded', () => {
     return msgDiv;
   }
 
-  function simulateBotResponse(userMsg) {
+  async function simulateBotResponse(userMsg) {
     const indicator = addTypingIndicator();
     
-    setTimeout(() => {
-      indicator.remove();
-      const lowerMsg = userMsg.toLowerCase();
-      let response = "I'm still learning! But I can tell you about the ISS, planets, or meteor showers.";
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: userMsg })
+      });
       
-      if (lowerMsg.includes('see') || lowerMsg.includes('tonight')) {
-        response = "Tonight you'll have a great view of **Venus** right after sunset in the west. **Jupiter** will also be visible from 8:00 PM onwards.";
-      } else if (lowerMsg.includes('interesting') || lowerMsg.includes('today')) {
-        response = "Yes! The **Arietiids Meteor Shower** is active today. It's a daytime shower, but you might catch some right before dawn tomorrow.";
-      } else if (lowerMsg.includes('iss') || lowerMsg.includes('space station')) {
-        response = "The ISS is currently orbiting at over 27,000 km/h! You can track its live position on the map to your left.";
-      } else if (lowerMsg.includes('outside')) {
-        response = "I'd recommend going outside around 8:45 PM tonight. The skies will be clear, and you might catch a satellite flyover!";
-      } else if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
-        response = "Hello there, star-gazer! How can I help you explore the cosmos today?";
-      }
+      const data = await res.json();
+      indicator.remove();
 
-      addMessage(response, false);
-    }, 1500);
+      if (res.ok && data.reply) {
+        addMessage(data.reply, false);
+      } else {
+        addMessage("Oops, I had trouble reaching my neural network. " + (data.error || ""), false);
+      }
+    } catch (err) {
+      indicator.remove();
+      addMessage("Connection error. Ensure the serverless function is running.", false);
+      console.error(err);
+    }
   }
 
   chatForm.addEventListener('submit', (e) => {
