@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SkyScan — 3D Galaxy Explorer</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { margin: 0; overflow: hidden; background-color: #000; }
+    #glcanvas { display: block; width: 100vw; height: 100vh; position: absolute; top:0; left:0; z-index: 1;}
+    .ui-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 10;
+      padding: 1.5rem;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      pointer-events: auto;
+    }
+    .info-panel {
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 320px;
+      pointer-events: auto;
+      display: none;
+      animation: fade-in 0.3s forwards;
+      padding: 1.5rem;
+    }
+    .controls-hint {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.8rem;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="ui-overlay">
+    <div class="top-bar">
+      <a href="index.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+      <button id="multiverse-btn" class="btn btn-primary"><i class="fa-solid fa-infinity"></i> View Multiversal Map</button>
+    </div>
+    
+    <div id="planet-info" class="glass-panel info-panel">
+      <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+        <h3 id="p-name" class="text-cyan" style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 600;"><i class="fa-solid fa-globe"></i> Planet Name</h3>
+        <i class="fa-solid fa-xmark" id="close-info" style="cursor: pointer; color: var(--text-muted);"></i>
+      </div>
+      <p id="p-desc" class="text-secondary" style="font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.4;">Description goes here.</p>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px;">
+          <span class="text-muted" style="font-size: 0.75rem;">Type</span>
+          <span id="p-type" style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span class="text-muted" style="font-size: 0.75rem;">Moons</span>
+          <span id="p-moons" style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">--</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-hint text-primary">
+      <strong>Click</strong> anywhere to lock mouse (Minecraft style). Use <strong>W, A, S, D</strong> to fly.
+    </div>
+
+    <!-- Center Crosshair -->
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 4px; background: white; border-radius: 50%; pointer-events: none; mix-blend-mode: difference; z-index: 20;"></div>
+  </div>
+
+  <canvas id="glcanvas"></canvas>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="explore.js"></script>
+</body>
+</html>
