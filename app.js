@@ -283,8 +283,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   birthdayForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const selectedDate = birthdayInput.value;
+    let selectedDate = birthdayInput.value;
     if (!selectedDate) return;
+
+    // Fix for DD-MM-YYYY formats fallback from some browsers
+    const ddmmyyyyMatch = selectedDate.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+    if (ddmmyyyyMatch) {
+      selectedDate = `${ddmmyyyyMatch[3]}-${ddmmyyyyMatch[2]}-${ddmmyyyyMatch[1]}`;
+    }
 
     birthdayResult.style.display = 'block';
     birthdayResult.innerHTML = '<p class="text-cyan pulse">Communicating with NASA...</p>';
@@ -293,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const limitDate = new Date('1995-06-16');
     const inputDateObj = new Date(selectedDate);
     
-    if (inputDateObj < limitDate) {
+    if (inputDateObj < limitDate || isNaN(inputDateObj)) {
       birthdayResult.innerHTML = `
         <div class="apod-error">
           <p><i class="fa-solid fa-triangle-exclamation text-orange"></i> NASA APOD archives only go back to <strong>June 16, 1995</strong>.</p>
@@ -305,7 +311,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const res = await fetch(`https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=${selectedDate}`);
+      
+      if (res.status === 429) {
+        throw new Error('RATE_LIMIT');
+      }
       if (!res.ok) throw new Error('API Request Failed');
+      
       const data = await res.json();
       
       let mediaHtml = '';
@@ -321,7 +332,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <p class="text-muted" style="font-size:0.8rem; margin-top:0.4rem; max-height:100px; overflow-y:auto; padding-right:5px;">${data.explanation}</p>
       `;
     } catch (error) {
-      birthdayResult.innerHTML = `<p class="text-red">Error fetching data. Try another date.</p>`;
+      if (error.message === 'RATE_LIMIT') {
+        birthdayResult.innerHTML = `<p class="text-orange" style="font-size: 0.9rem;"><i class="fa-solid fa-clock"></i> NASA API Rate Limit Exceeded. The public key is busy right now. Please try again in a few minutes!</p>`;
+      } else {
+        birthdayResult.innerHTML = `<p class="text-red">Error fetching data. Try another date.</p>`;
+      }
     }
   });
 });
