@@ -153,11 +153,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 4c. Multiversal Map Concentric Rings removed from 3D view
 
-  // 5. Orbit Controls
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.maxDistance = 10000;
+  // 5. Flight Controls (Simple WASD + Mouse look)
+  const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
+  let targetYaw = 0;
+  let targetPitch = 0;
+  let yaw = 0;
+  let pitch = 0;
+
+  document.addEventListener('keydown', (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key] = true; });
+  document.addEventListener('keyup', (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key] = false; });
+
+  // Minecraft style pointer lock
+  canvas.addEventListener('click', () => {
+    if (document.pointerLockElement !== canvas) {
+      canvas.requestPointerLock();
+    }
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (document.pointerLockElement === canvas) {
+      targetYaw -= e.movementX * 0.002;
+      targetPitch -= e.movementY * 0.002;
+      targetPitch = Math.max(-Math.PI/2, Math.min(Math.PI/2, targetPitch));
+    }
+  });
+
+  function updateCameraMovement() {
+    const moveSpeed = 3.0;
+    const direction = new THREE.Vector3();
+    camera.getWorldDirection(direction);
+    
+    const right = new THREE.Vector3();
+    right.crossVectors(direction, camera.up).normalize();
+
+    if (keys.w || keys.ArrowUp) camera.position.addScaledVector(direction, moveSpeed);
+    if (keys.s || keys.ArrowDown) camera.position.addScaledVector(direction, -moveSpeed);
+    if (keys.a || keys.ArrowLeft) camera.position.addScaledVector(right, -moveSpeed);
+    if (keys.d || keys.ArrowRight) camera.position.addScaledVector(right, moveSpeed);
+  }
 
   // 6. Raycasting (Clicking Planets)
   const raycaster = new THREE.Raycaster();
@@ -169,10 +202,12 @@ document.addEventListener('DOMContentLoaded', () => {
     infoPanel.style.display = 'none';
   });
 
-  window.addEventListener('click', (e) => {
-    // Calculate mouse position in normalized device coordinates (-1 to +1)
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  canvas.addEventListener('mousedown', (e) => {
+    if (document.pointerLockElement !== canvas) return;
+    
+    // Raycast from the center crosshair
+    mouse.x = 0;
+    mouse.y = 0;
 
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(planetMeshes);
@@ -198,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       
       infoPanel.style.display = 'block';
+      document.exitPointerLock(); // Free the mouse so they can click the close button
     }
   });
 
@@ -216,7 +252,17 @@ document.addEventListener('DOMContentLoaded', () => {
       p.mesh.rotation.y += 0.01; // self rotation
     });
 
-    controls.update();
+    updateCameraMovement();
+
+    // Smoothly interpolate yaw and pitch to follow mouse
+    yaw += (targetYaw - yaw) * 0.05;
+    pitch += (targetPitch - pitch) * 0.05;
+
+    // Apply camera rotation
+    const qx = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+    const qy = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), pitch);
+    camera.quaternion.copy(new THREE.Quaternion().multiplyQuaternions(qx, qy));
+
     renderer.render(scene, camera);
   }
 

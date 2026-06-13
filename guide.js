@@ -430,9 +430,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('g-article').innerHTML = data.article;
 
   const factsHtml = data.facts.map(f => `
-    <div class="fact-row">
-      <span class="text-muted">${f.label}</span>
-      <span style="font-weight: 600; color: var(--text-primary);">${f.value}</span>
+    <div class="fact-row" style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+      <span style="color: #00f0ff; font-size: 0.85rem;">${f.label}</span>
+      <span style="font-weight: 600; color: #ffffff; font-size: 0.9rem;">${f.value}</span>
     </div>
   `).join('');
   document.getElementById('g-facts').innerHTML = factsHtml;
