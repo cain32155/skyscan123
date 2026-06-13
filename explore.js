@@ -63,30 +63,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // 4. Planets Data
+  const texBase = 'https://www.solarsystemscope.com/textures/download/';
   const planetData = [
-    { name: "Sun", color: 0xffcc00, size: 40, distance: 0, speed: 0, type: "Star", moons: 0, desc: "The star at the center of the Solar System. It is a nearly perfect sphere of hot plasma." },
-    { name: "Mercury", color: 0xaaaaaa, size: 3, distance: 70, speed: 0.02, type: "Terrestrial", moons: 0, desc: "The smallest planet in the Solar System and the closest to the Sun." },
-    { name: "Venus", color: 0xe3bb76, size: 7, distance: 110, speed: 0.015, type: "Terrestrial", moons: 0, desc: "The second planet from the Sun. It is a terrestrial planet and is sometimes called Earth's sister planet." },
-    { name: "Earth", color: 0x2b82c9, size: 7.5, distance: 160, speed: 0.01, type: "Terrestrial", moons: 1, desc: "Our home planet. The third planet from the Sun and the only astronomical object known to harbor life." },
-    { name: "Mars", color: 0xc1440e, size: 4, distance: 220, speed: 0.008, type: "Terrestrial", moons: 2, desc: "The fourth planet from the Sun. It is a dusty, cold, desert world with a very thin atmosphere." },
-    { name: "Jupiter", color: 0xd39c7e, size: 20, distance: 340, speed: 0.005, type: "Gas Giant", moons: 95, desc: "The largest planet in the Solar System. It is a gas giant with a mass more than two and a half times that of all the other planets in the Solar System combined." },
-    { name: "Saturn", color: 0xead6b8, size: 17, distance: 480, speed: 0.003, type: "Gas Giant", moons: 146, desc: "The sixth planet from the Sun, known for its extensive ring system." },
-    { name: "Uranus", color: 0xd1e7e7, size: 10, distance: 620, speed: 0.002, type: "Ice Giant", moons: 27, desc: "The seventh planet from the Sun. It has the third-largest planetary radius and fourth-largest planetary mass in the Solar System." },
-    { name: "Neptune", color: 0x3f54ba, size: 9.5, distance: 750, speed: 0.001, type: "Ice Giant", moons: 14, desc: "The eighth and farthest-known Solar planet from the Sun. It is the fourth-largest planet by diameter." }
+    { name: "Sun", color: 0xffcc00, size: 40, distance: 0, speed: 0, type: "Star", moons: 0, tex: texBase+"2k_sun.jpg", desc: "The star at the center of the Solar System. It is a nearly perfect sphere of hot plasma." },
+    { name: "Mercury", color: 0xaaaaaa, size: 3, distance: 70, speed: 0.02, type: "Terrestrial", moons: 0, tex: texBase+"2k_mercury.jpg", desc: "The smallest planet in the Solar System and the closest to the Sun." },
+    { name: "Venus", color: 0xe3bb76, size: 7, distance: 110, speed: 0.015, type: "Terrestrial", moons: 0, tex: texBase+"2k_venus_surface.jpg", desc: "The second planet from the Sun. It is a terrestrial planet and is sometimes called Earth's sister planet." },
+    { name: "Earth", color: 0x2b82c9, size: 7.5, distance: 160, speed: 0.01, type: "Terrestrial", moons: 1, tex: texBase+"2k_earth_daymap.jpg", desc: "Our home planet. The third planet from the Sun and the only astronomical object known to harbor life." },
+    { name: "Mars", color: 0xc1440e, size: 4, distance: 220, speed: 0.008, type: "Terrestrial", moons: 2, tex: texBase+"2k_mars.jpg", desc: "The fourth planet from the Sun. It is a dusty, cold, desert world with a very thin atmosphere." },
+    { name: "Jupiter", color: 0xd39c7e, size: 20, distance: 340, speed: 0.005, type: "Gas Giant", moons: 95, tex: texBase+"2k_jupiter.jpg", desc: "The largest planet in the Solar System. It is a gas giant with a mass more than two and a half times that of all the other planets in the Solar System combined." },
+    { name: "Saturn", color: 0xead6b8, size: 17, distance: 480, speed: 0.003, type: "Gas Giant", moons: 146, tex: texBase+"2k_saturn.jpg", desc: "The sixth planet from the Sun, known for its extensive ring system." },
+    { name: "Uranus", color: 0xd1e7e7, size: 10, distance: 620, speed: 0.002, type: "Ice Giant", moons: 27, tex: texBase+"2k_uranus.jpg", desc: "The seventh planet from the Sun. It has the third-largest planetary radius and fourth-largest planetary mass in the Solar System." },
+    { name: "Neptune", color: 0x3f54ba, size: 9.5, distance: 750, speed: 0.001, type: "Ice Giant", moons: 14, tex: texBase+"2k_neptune.jpg", desc: "The eighth and farthest-known Solar planet from the Sun. It is the fourth-largest planet by diameter." }
   ];
-
   const planets = [];
   const planetMeshes = [];
 
   const sphereGeo = new THREE.SphereGeometry(1, 32, 32);
 
+  const textureLoader = new THREE.TextureLoader();
+
   planetData.forEach((data, index) => {
     let material;
+    const tex = textureLoader.load(data.tex);
     if (data.name === "Sun") {
-      material = new THREE.MeshBasicMaterial({ color: data.color });
+      material = new THREE.MeshBasicMaterial({ map: tex, color: 0xffffff });
     } else {
       material = new THREE.MeshStandardMaterial({ 
-        color: data.color,
+        map: tex,
         roughness: 0.7,
         metalness: 0.1
       });
@@ -129,6 +132,52 @@ document.addEventListener('DOMContentLoaded', () => {
     planets.push({ pivot, mesh, speed: data.speed });
     planetMeshes.push(mesh);
   });
+
+  // 4b. Asteroid Belt (InstancedMesh for performance)
+  const astCount = 4000;
+  const astGeo = new THREE.IcosahedronGeometry(0.8, 0);
+  const astMat = new THREE.MeshStandardMaterial({ color: 0x887766, roughness: 0.9 });
+  const astMesh = new THREE.InstancedMesh(astGeo, astMat, astCount);
+  const dummy = new THREE.Object3D();
+  for(let i=0; i<astCount; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 250 + Math.random() * 60; // Between Mars and Jupiter
+    dummy.position.set(Math.cos(angle) * radius, (Math.random() - 0.5) * 8, Math.sin(angle) * radius);
+    dummy.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+    const scale = 0.5 + Math.random() * 1.5;
+    dummy.scale.set(scale, scale, scale);
+    dummy.updateMatrix();
+    astMesh.setMatrixAt(i, dummy.matrix);
+  }
+  scene.add(astMesh);
+
+  // 4c. Multiversal Map Concentric Rings
+  const multiverseGroup = new THREE.Group();
+  multiverseGroup.visible = false;
+  const scales = [
+    { name: "Oort Cloud", radius: 1200, color: 0x00ffff, desc: "The extended shell of icy objects that exist in the outermost reaches of the solar system." },
+    { name: "Milky Way Galaxy", radius: 2500, color: 0xff00ff, desc: "Our home galaxy, a barred spiral galaxy containing 100-400 billion stars." },
+    { name: "Local Group", radius: 4500, color: 0x00ff00, desc: "The galaxy group that includes the Milky Way, Andromeda, and about 80 smaller galaxies." },
+    { name: "Virgo Supercluster", radius: 7000, color: 0xffff00, desc: "A massive concentration of galaxies that contains the Local Group." },
+    { name: "Laniakea", radius: 10000, color: 0xff8800, desc: "The galaxy supercluster that is home to the Milky Way and approximately 100,000 other nearby galaxies." },
+    { name: "Observable Universe", radius: 15000, color: 0xffffff, desc: "A spherical region of the universe comprising all matter that can be observed from Earth." }
+  ];
+  scales.forEach(scale => {
+    const rGeo = new THREE.RingGeometry(scale.radius - 15, scale.radius + 15, 128);
+    const rMat = new THREE.MeshBasicMaterial({ color: scale.color, side: THREE.DoubleSide, transparent: true, opacity: 0.15 });
+    const ring = new THREE.Mesh(rGeo, rMat);
+    ring.rotation.x = Math.PI / 2;
+    multiverseGroup.add(ring);
+
+    const oGeo = new THREE.SphereGeometry(80, 32, 32);
+    const oMat = new THREE.MeshBasicMaterial({ color: scale.color });
+    const orb = new THREE.Mesh(oGeo, oMat);
+    orb.position.set(scale.radius, 0, 0);
+    orb.userData = { name: scale.name, type: "Cosmic Scale", desc: scale.desc, moons: "N/A" };
+    planetMeshes.push(orb);
+    multiverseGroup.add(orb);
+  });
+  scene.add(multiverseGroup);
 
   // 5. Flight Controls (Simple WASD + Mouse look)
   const keys = { w: false, a: false, s: false, d: false, ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false };
@@ -198,6 +247,19 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('p-type').textContent = pData.type;
       document.getElementById('p-moons').textContent = pData.moons;
       
+      const imgEl = document.getElementById('p-img');
+      if (pData.tex) {
+        imgEl.src = pData.tex;
+        imgEl.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+      }
+
+      const btnEl = document.getElementById('p-guide-btn');
+      btnEl.onclick = () => {
+        window.location.href = `guide.html?entity=${encodeURIComponent(pData.name)}`;
+      };
+      
       infoPanel.style.display = 'block';
       document.exitPointerLock(); // Free the mouse so they can click the close button
     }
@@ -211,7 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if(isMultiverseMode) {
       btn.innerHTML = `<i class="fa-solid fa-solar-system"></i> Back to Solar System`;
       // Zoom out way far
-      targetCameraZ = 5000;
+      targetCameraZ = 18000;
+      multiverseGroup.visible = true;
     } else {
       btn.innerHTML = `<i class="fa-solid fa-infinity"></i> View Multiversal Map`;
       // Zoom back in
@@ -219,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
       camera.position.set(0, 50, 400);
       yaw = 0; pitch = 0;
       camera.rotation.set(0,0,0);
+      multiverseGroup.visible = false;
     }
   });
 

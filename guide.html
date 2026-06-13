@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyScan - Cosmic Guide</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <style>
+    body {
+      background-color: var(--bg-dark);
+      background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, var(--bg-dark) 60%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .hero-section {
+      width: 100%;
+      height: 40vh;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 3rem;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to top, var(--bg-dark) 0%, rgba(2,2,5,0.2) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-cyan);
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      padding: 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .article-body {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .article-body h2 {
+      font-family: var(--font-display);
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+
+    .fact-card {
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .fact-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 0.8rem 0;
+    }
+
+    .fact-row:last-child {
+      border-bottom: none;
+    }
+
+    .diagram-container {
+      margin-top: 2rem;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 2rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+
+    .nav-bar {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      z-index: 10;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="nav-bar">
+    <a href="explore.html" class="btn btn-secondary glass-panel"><i class="fa-solid fa-arrow-left"></i> Back to Explorer</a>
+  </div>
+
+  <div class="hero-section" id="hero-sec">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-subtitle" id="g-type">Celestial Body</div>
+      <h1 class="hero-title" id="g-name">Loading...</h1>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div>
+      <div class="glass-panel" style="padding: 2rem;">
+        <div class="article-body" id="g-article">
+          <h2>Overview</h2>
+          <p>Loading detailed information...</p>
+        </div>
+
+        <div class="diagram-container">
+          <h3 style="font-family: var(--font-display); margin-bottom: 1rem; color: var(--text-cyan);">Internal Structure / Architecture</h3>
+          <div id="mermaid-target" class="mermaid">
+            <!-- Mermaid diagram will be injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="glass-panel fact-card">
+        <h3 style="font-family: var(--font-display); margin-bottom: 1rem; font-size: 1.3rem;">Quick Facts</h3>
+        <div id="g-facts">
+          <!-- Facts injected dynamically -->
+        </div>
+      </div>
+      
+      <div class="glass-panel fact-card" style="margin-top: 2rem;">
+        <h3 style="font-family: var(--font-display); margin-bottom: 1rem; font-size: 1.3rem;">Ask AstroBot</h3>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">Want to know more about this entity? Head back to the dashboard and ask AstroBot!</p>
+        <a href="index.html" class="btn btn-primary" style="width: 100%; display: block; text-align: center;"><i class="fa-solid fa-robot"></i> Go to Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="guide.js"></script>
+</body>
+</html>
