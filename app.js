@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (error.message === 'RATE_LIMIT') {
         birthdayResult.innerHTML = `<p class="text-orange" style="font-size: 0.9rem;"><i class="fa-solid fa-clock"></i> NASA API Rate Limit Exceeded. The public key is busy right now. Please try again in a few minutes!</p>`;
       } else {
-        birthdayResult.innerHTML = `<p class="text-red">Error fetching data. Try another date.</p>`;
+        birthdayResult.innerHTML = `<p class="text-red" style="font-size: 0.9rem;">Debug Error: ${error.message} <br> Date Value: ${selectedDate}</p>`;
       }
     }
   });
